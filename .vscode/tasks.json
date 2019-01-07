@@ -4,20 +4,20 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Build utf8proc (Windows)",
+      "label": "Build Debug (Windows)",
       "type": "shell",
       "group": "build",
-      "command": "clang-cl",
-      "args": [
-        "-Z7",
-        "-c",
-        
-        "extern/utf8proc/utf8proc.c",
+      "command": ".\\build.bat",
+      "args": [ "debug"],
+      "problemMatcher": []
+    },
 
-        "-Fobuild/utf8proc_debug",
-
-        "-DUTF8PROC_STATIC",
-      ],
+    {
+      "label": "Build Release (Windows)",
+      "type": "shell",
+      "group": "build",
+      "command": ".\\build.bat",
+      "args": [ "release"],
       "problemMatcher": []
     },
 
@@ -31,7 +31,7 @@
         "-std:c++17",
 
         ".\\test.cc",
-        "build/utf8proc_debug.obj",
+        "build/utf8_debug.lib",
 
         "-obuild/utf8_test",
       ],
