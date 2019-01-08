@@ -227,6 +227,14 @@ namespace utf8 {
     return p;
   }
 
+  void String::move (String& source) {
+    bytes = source.bytes;
+    byte_length = source.byte_length;
+    byte_capacity = source.byte_capacity;
+    source.bytes = NULL;
+    source.dispose();
+  }
+
 
   String String::from_file (char const* file_name) {
     FILE* f = NULL;

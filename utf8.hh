@@ -160,6 +160,8 @@ namespace utf8 {
 
     uint8_t* release ();
 
+    void move (String& source);
+
     
     static
     String from_file (char const* file_name);
