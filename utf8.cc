@@ -140,12 +140,14 @@ namespace utf8 {
   }
 
   extern
-  size_t char_count (uint8_t const* ustr) {
+  size_t char_count (uint8_t const* ustr, size_t max_byte_length) {
     size_t i = 0;
-
-    while (*ustr != '\0') {
+    size_t byte_offset = 0;
+    
+    while (ustr[byte_offset] != '\0'
+    && byte_offset < max_byte_length) {
       ++ i;
-      ustr += char_size(ustr);
+      byte_offset += char_size(ustr);
     }
 
     return i;
@@ -184,7 +186,7 @@ namespace utf8 {
   }
 
   extern
-  size_t char_at (uint8_t const* ustr, size_t index) {
+  int32_t char_at (uint8_t const* ustr, size_t index) {
     return to_int(index_offset(ustr, index));
   }
 
