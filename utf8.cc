@@ -191,6 +191,28 @@ namespace utf8 {
   }
 
 
+  inline extern
+  bool is_whitespace (int32_t c) {
+    return (c >= 0x0009 && c <= 0x000D)
+        || c == 0x0020
+        || c == 0x0085
+        || c == 0x00A0
+        || c == 0x1680
+        || (c >= 0x2000 && c <= 0x200A)
+        || c == 0x2028
+        || c == 0x2029
+        || c == 0x202F
+        || c == 0x205F
+        || c == 0x3000
+        ;
+  }
+
+  extern
+  bool is_whitespace (uint8_t const* c) {
+    return is_whitespace(to_int(c));
+  }
+
+
 
   StringIteratorResult StringIterator::operator * () const {
     return { index, utf8::to_int(bytes) };

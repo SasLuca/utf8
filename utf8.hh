@@ -61,6 +61,12 @@ namespace utf8 {
   /* Extract a grapheme at an index in a utf8 ustr as utf32 */
   extern int32_t char_at (uint8_t const* ustr, size_t index);
 
+  /* Determine whether a specific grapheme is a whitespace character */
+  extern bool is_whitespace (int32_t c);
+
+  /* Determine whether a specific grapheme is a whitespace character */
+  extern bool is_whitespace (uint8_t const* c);
+
 
   /* Wrapper for index and value returned by StringIterator */
   struct StringIteratorResult {
