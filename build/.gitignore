@@ -2,3 +2,5 @@
 /*.ilk
 /*.pdb
 /*.obj
+/*.o
+/utf8_test

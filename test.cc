@@ -68,8 +68,18 @@ int main() {
   }
 
 
-  FILE* f = NULL;
-  fopen_s(&f, "test_in.txt", "rb");
+  FILE* f;
+  #ifdef _WIN32
+    f = NULL;
+    fopen_s(&f, "test_in.txt", "rb");
+  #else
+    f = fopen("test_in.txt", "rb");
+  #endif
+
+  if (f == NULL) {
+    printf("Error reading file \"test_in.txt\"\n");
+    abort();
+  }
 
   uint8_t cmem [4] = { 0, 0, 0, 0 };
   size_t csize = 0;

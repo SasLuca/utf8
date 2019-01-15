@@ -239,9 +239,16 @@ namespace utf8 {
 
 
   String String::from_file (char const* file_name) {
-    FILE* f = NULL;
+    FILE* f;
 
-    if (fopen_s(&f, file_name, "rb")) {
+    #ifdef _WIN32
+      f = NULL;
+      fopen_s(&f, file_name, "rb");
+    #else
+      f = fopen(file_name, "rb");
+    #endif
+
+    if (f == NULL) {
       printf("Error reading file \"%s\"\n", file_name);
       abort();
     }
@@ -265,10 +272,17 @@ namespace utf8 {
 
 
   void String::to_file (char const* file_name) const {
-    FILE* f = NULL;
+    FILE* f;
+    
+    #ifdef _WIN32
+      f = NULL;
+      fopen_s(&f, file_name, "wb");
+    #else
+      f = fopen(file_name, "wb");
+    #endif
 
-    if (fopen_s(&f, file_name, "wb")) {
-      printf("Error writing file \"%s\"\n", file_name);
+    if (f == NULL) {
+      printf("Error reading file \"%s\"\n", file_name);
       abort();
     }
 

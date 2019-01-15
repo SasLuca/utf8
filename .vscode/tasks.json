@@ -22,6 +22,24 @@
     },
 
     {
+      "label": "Build Debug (Linux)",
+      "type": "shell",
+      "group": "build",
+      "command": "./build.sh",
+      "args": [ "debug"],
+      "problemMatcher": []
+    },
+
+    {
+      "label": "Build Release (Linux)",
+      "type": "shell",
+      "group": "build",
+      "command": "./build.sh",
+      "args": [ "release"],
+      "problemMatcher": []
+    },
+
+    {
       "label": "Build Test (Windows)",
       "type": "shell",
       "group": "build",
@@ -39,10 +57,35 @@
     },
 
     {
+      "label": "Build Test (Linux)",
+      "type": "shell",
+      "group": "build",
+      "command": "clang++",
+      "args": [
+        "-g",
+        "-std=c++17",
+
+        "./test.cc",
+        "build/utf8_debug.a",
+
+        "-obuild/utf8_test",
+      ],
+      "problemMatcher": []
+    },
+
+    {
       "label": "Run Test (Windows)",
       "type": "shell",
       "group": "build",
       "command": ".\\build\\utf8_test",
+      "problemMatcher": []
+    },
+
+    {
+      "label": "Run Test (Linux)",
+      "type": "shell",
+      "group": "build",
+      "command": "build/utf8_test",
       "problemMatcher": []
     }
   ]
