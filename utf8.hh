@@ -110,8 +110,8 @@ namespace utf8 {
     { insert(src, length); }
 
     /* Create a String from a str subsection */
-    String (char const* src)
-    { insert((uint8_t const*) src); }
+    String (char const* src, size_t length)
+    { insert((uint8_t const*) src, length); }
 
     /* Create a copy of a String */
     String (String const& src)
