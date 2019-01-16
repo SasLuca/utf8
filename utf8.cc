@@ -147,7 +147,7 @@ namespace utf8 {
     while (ustr[byte_offset] != '\0'
     && byte_offset < max_byte_length) {
       ++ i;
-      byte_offset += char_size(ustr);
+      byte_offset += char_size(ustr + byte_offset);
     }
 
     return i;
