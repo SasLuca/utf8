@@ -315,9 +315,9 @@ namespace utf8 {
 
 
   void String::collapse_allocation () {
-    if (byte_capacity > byte_length) {
-      bytes = (uint8_t*) realloc(bytes, byte_length);
-      byte_capacity = byte_length;
+    if (byte_capacity > byte_length + 1) {
+      bytes = (uint8_t*) realloc(bytes, byte_length + 1);
+      byte_capacity = byte_length + 1;
     }
   }
 
