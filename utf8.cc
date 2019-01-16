@@ -286,7 +286,8 @@ namespace utf8 {
     fread(out.bytes, length, 1, f);
 
     fclose(f);
-
+    
+    out.byte_length = length;
     out.bytes[length] = 0;
 
     return out;
