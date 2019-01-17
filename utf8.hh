@@ -67,6 +67,12 @@ namespace utf8 {
   /* Determine whether a specific grapheme is a whitespace character */
   extern bool is_whitespace (uint8_t const* c);
 
+  /* Get the number of visual columns associated with a series of utf8 graphemes */
+  extern size_t column_count (uint8_t const* ustr, size_t max_byte_length = SIZE_MAX);
+
+  /* Get the number of visual columns associated with a utf32 grapheme */
+  extern size_t column_count (int32_t c);
+
 
   /* Wrapper for index and value returned by StringIterator */
   struct StringIteratorResult {

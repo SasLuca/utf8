@@ -97,4 +97,6 @@ int main() {
   utf8::String string5 { "Hello world 😊\nllama llama llama 💩\ndrÀmÀ drÀmÀ drÀmÀ\nÑooß" };
   string5.to_file("test_out.txt");
   printf("Wrote file to test_out.txt\n");
+
+  printf("Number of columns for 😊: %zu, for A: %zu\n", utf8::column_count((uint8_t const*) "😊"), utf8::column_count((int32_t)'A'));
 }

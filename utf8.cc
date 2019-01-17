@@ -1,9 +1,10 @@
 #include "utf8.hh"
 
 extern "C" {
-  int32_t  utf8proc_toupper(int32_t c);
-  int32_t  utf8proc_tolower(int32_t c);
-  uint8_t* utf8proc_NFKC_Casefold(uint8_t const* str);
+  int32_t  utf8proc_toupper (int32_t c);
+  int32_t  utf8proc_tolower (int32_t c);
+  int utf8proc_charwidth (int32_t c);
+  uint8_t* utf8proc_NFKC_Casefold (uint8_t const* str);
 }
 
 #ifdef _WIN32
@@ -210,6 +211,27 @@ namespace utf8 {
   extern
   bool is_whitespace (uint8_t const* c) {
     return is_whitespace(to_int(c));
+  }
+
+
+  extern
+  size_t column_count (uint8_t const* ustr, size_t max_byte_length) {
+    size_t byte_offset = 0;
+    size_t columns = 0;
+    
+    while (ustr[byte_offset] != '\0' && byte_offset < max_byte_length) {
+      int32_t uchar = to_int(ustr + byte_offset);
+      size_t byte_size = char_size(uchar);
+      columns += utf8proc_charwidth(uchar);
+      byte_offset += byte_size;
+    }
+
+    return columns;
+  }
+
+  extern
+  size_t column_count (int32_t c) {
+    return utf8proc_charwidth(c);
   }
 
 
