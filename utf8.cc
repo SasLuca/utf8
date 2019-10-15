@@ -14,7 +14,7 @@ extern "C" {
       int __declspec(dllimport) SetConsoleCP (unsigned int);
       int __declspec(dllimport) SetConsoleOutputCP (unsigned int);
     }
-    
+
     static constexpr
     unsigned int UTF8_FLAG = 65001;
   }
@@ -40,15 +40,19 @@ namespace utf8 {
 
   extern
   size_t char_size (uint8_t const* c) {
-    if (*c < 128) {
-      return 1;
-    } else if (*c < 224) {
-      return 2;
-    } else if (*c < 240) {
-      return 3;
-    } else {
-      return 4;
-    }
+    const bool vals[] = {
+      (*c & 0b10000000) == 0b00000000,
+      (*c & 0b11100000) == 0b11000000,
+      (*c & 0b11110000) == 0b11100000,
+      (*c & 0b11111000) == 0b11110000,
+    };
+
+    size_t out = 0;
+
+    for (uint8_t i = 0; i < 4; ++i)
+      vals[i] && (out = i);
+
+    return out + 1;
   }
 
   extern
@@ -144,7 +148,7 @@ namespace utf8 {
   size_t char_count (uint8_t const* ustr, size_t max_byte_length) {
     size_t i = 0;
     size_t byte_offset = 0;
-    
+
     while (ustr[byte_offset] != '\0'
     && byte_offset < max_byte_length) {
       ++ i;
@@ -218,7 +222,7 @@ namespace utf8 {
   size_t column_count (uint8_t const* ustr, size_t max_byte_length) {
     size_t byte_offset = 0;
     size_t columns = 0;
-    
+
     while (ustr[byte_offset] != '\0' && byte_offset < max_byte_length) {
       int32_t uchar = to_int(ustr + byte_offset);
       size_t byte_size = char_size(uchar);
@@ -308,7 +312,7 @@ namespace utf8 {
     fread(out.bytes, length, 1, f);
 
     fclose(f);
-    
+
     out.byte_length = length;
     out.bytes[length] = 0;
 
@@ -318,7 +322,7 @@ namespace utf8 {
 
   void String::to_file (char const* file_name) const {
     FILE* f;
-    
+
     #ifdef _WIN32
       f = NULL;
       fopen_s(&f, file_name, "wb");
@@ -410,7 +414,7 @@ namespace utf8 {
     if (index >= utf8::char_count(bytes)) return insert(seg, length);
 
     if (length == 0) length = utf8::byte_count(seg);
-  
+
     grow_allocation(length);
 
     size_t offset = utf8::byte_offset(bytes, index);
@@ -421,7 +425,7 @@ namespace utf8 {
 
     byte_length += length;
   }
-  
+
   void String::insert_at (size_t index, char const* str, size_t length) {
     insert_at(index, (uint8_t const*) str, length);
   }
@@ -430,13 +434,13 @@ namespace utf8 {
     if (index >= utf8::char_count(bytes)) return insert(c);
 
     size_t length = utf8::char_size(c);
-    
+
     grow_allocation(length);
 
     size_t offset = utf8::byte_offset(bytes, index);
 
     memmove(bytes + offset + length, bytes + offset, byte_length - offset);
-    
+
     if (length == 1) {
       bytes[offset] = c;
     } else if (length == 2) {
@@ -473,7 +477,7 @@ namespace utf8 {
     va_copy(args_b, args);
 
     int length = vsnprintf(NULL, 0, (char const*) fmt, args_b);
-    
+
     va_end(args_b);
 
     grow_allocation(length);
@@ -501,7 +505,7 @@ namespace utf8 {
     insert_fmt_va(fmt, args);
     va_end(args);
   }
-  
+
 
   void String::insert_fmt_at_va (size_t index, uint8_t const* fmt, va_list args) {
     if (index >= utf8::char_count(bytes)) return insert_fmt_va(fmt, args);
@@ -511,7 +515,7 @@ namespace utf8 {
     va_copy(args_b, args);
 
     int length = vsnprintf(NULL, 0, (char const*) fmt, args_b);
-    
+
     va_end(args_b);
 
     grow_allocation(length + 1);
@@ -550,7 +554,7 @@ namespace utf8 {
     va_end(args);
   }
 
-      
+
   String String::to_lowercase () const {
     String out { byte_length };
 
@@ -568,7 +572,7 @@ namespace utf8 {
   }
 
   // utf8proc totitle is broken
-  // String String::to_titlecase () const { 
+  // String String::to_titlecase () const {
   //   String out { byte_length };
 
   //   for (auto [ i, c ] : *this) out.insert(utf8proc_totitle(c));
@@ -578,9 +582,9 @@ namespace utf8 {
 
   String String::casefold () const {
     uint8_t* new_bytes = utf8proc_NFKC_Casefold(bytes);
-    
+
     size_t new_length = utf8::byte_count(new_bytes);
-    
+
     size_t new_capacity = DEFAULT_CAPACITY;
     while (new_capacity < new_length) new_capacity *= 2;
 
