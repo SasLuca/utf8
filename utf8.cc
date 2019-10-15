@@ -39,7 +39,7 @@ namespace utf8 {
   }
 
   extern
-  size_t char_size (uint8_t const* c) {
+  uint8_t char_size (uint8_t const* c) {
     const bool vals[] = {
       (*c & 0b10000000) == 0b00000000,
       (*c & 0b11100000) == 0b11000000,
@@ -47,7 +47,7 @@ namespace utf8 {
       (*c & 0b11111000) == 0b11110000,
     };
 
-    size_t out = 0;
+    uint8_t out = 0;
 
     for (uint8_t i = 0; i < 4; ++i)
       vals[i] && (out = i);
@@ -56,32 +56,39 @@ namespace utf8 {
   }
 
   extern
-  size_t char_size (int32_t c) {
-    if (c < 0) goto err;
-    else if (c < 128) {
-      return 1;
-    } else if (c < 2048) {
-      return 2;
-    } else if (c < 65536) {
-      return 3;
-    } else if (c < 1114112) {
-      return 4;
-    } else goto err;
+  uint8_t char_size (uint32_t c) {
+    const bool vals[] = {
+      c < 128,
+      c >= 128 && c < 2048,
+      c >= 2048 && c < 65536,
+      c >= 65536 && c < 1114112,
+    };
 
-    err: {
+    uint8_t out = 0;
+
+    for (uint8_t i = 0; i < 4; ++i)
+      if (vals[i]) out = i;
+
+    if (c >= 1114112) {
       printf("Char code %d is out of utf8 range (Must be integer 0 - 1114112)\n", c);
       abort();
     }
+
+    return out + 1;
   }
 
   extern
-  int32_t to_int (uint8_t const* c) {
-    int32_t out = *c;
+  uint32_t to_int (uint8_t const* c) {
+    uint32_t out = *c;
 
-    if (out < 128) return out;
-    else if (out < 224) return ((out & 31) << 6) | (c[1] & 63);
-    else if (out < 240) return ((out & 15) << 12) | ((c[1] & 63) << 6) | (c[2] & 63);
-    else return ((out & 7) << 18) | ((c[1] & 63) << 12) | ((c[2] & 63) << 6) | (c[3] & 63);
+    switch (char_size(c)) {
+      case 1: return out;
+      case 2: return ((out & 31) << 6) | (c[1] & 63);
+      case 3: return ((out & 15) << 12) | ((c[1] & 63) << 6) | (c[2] & 63);
+      case 4: return ((out & 7) << 18) | ((c[1] & 63) << 12) | ((c[2] & 63) << 6) | (c[3] & 63);
+    }
+
+    return 0;
   }
 
   extern
