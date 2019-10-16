@@ -18,13 +18,13 @@ namespace utf8 {
   extern void setup_console ();
 
   /* Get the byte size of a given grapheme */
-  extern size_t char_size (uint8_t const* c);
+  extern uint8_t char_size (uint8_t const* c);
 
   /* Get the byte size of a given grapheme */
-  extern size_t char_size (int32_t c);
+  extern uint8_t char_size (uint32_t c);
 
   /* Convert a utf8 grapheme to utf32 */
-  extern int32_t to_int (uint8_t const* c);
+  extern uint32_t to_int (uint8_t const* c);
 
   /* Convert a utf32 grapheme to utf8 */
   extern size_t encode (int32_t c, uint8_t* bytes);
@@ -52,7 +52,7 @@ namespace utf8 {
 
   /* Get the number of graphemes in a segment of utf8 */
   extern size_t char_count (uint8_t const* ustr, size_t max_byte_length = SIZE_MAX);
-  
+
   /* Get the number of bytes in a utf8 ustr (wrapper for strlen) */
   inline size_t byte_count (uint8_t const* ustr) {
     return strlen((char const*) ustr);
@@ -85,7 +85,7 @@ namespace utf8 {
   struct StringIterator {
     size_t index = 0;
     uint8_t const* bytes = NULL;
-    
+
     StringIteratorResult operator * () const;
 
     StringIterator& operator ++ ();
@@ -172,7 +172,7 @@ namespace utf8 {
     bool operator != (uint8_t const* other) const {
       return strcmp((char const*) bytes, (char const*) other) != 0;
     }
-    
+
     /* Get the grapheme at an index in a String (Wrapper for char_at) */
     int32_t operator [] (size_t index) const {
       return char_at(index);
@@ -206,7 +206,7 @@ namespace utf8 {
 
     /* Load a utf8 file by name and create a String from it */
     static String from_file (char const* file_name);
-    
+
     /* Store a String to a utf8 file by name */
     void to_file (char const* file_name) const;
 
@@ -216,7 +216,7 @@ namespace utf8 {
 
     /* Grow the capacity of a String to fit some additional length */
     void grow_allocation (size_t additional_length);
-  
+
 
     /* Insert a ustr or subsection into a String */
     void insert (uint8_t const* str, size_t length = 0);
@@ -227,11 +227,11 @@ namespace utf8 {
     /* Insert a single utf32 grapheme into a String */
     void insert (int32_t c);
 
-    
-    /* Insert a ustr or subsection into a String at an existing grapheme index */  
+
+    /* Insert a ustr or subsection into a String at an existing grapheme index */
     void insert_at (size_t index, uint8_t const* seg, size_t length = 0);
-    
-    /* Insert a str or subsection into a String at an existing grapheme index */  
+
+    /* Insert a str or subsection into a String at an existing grapheme index */
     void insert_at (size_t index, char const* str, size_t length = 0);
 
     /* Insert a single utf32 grapheme into a String at an existing grapheme index */
@@ -240,7 +240,7 @@ namespace utf8 {
     /* Remove a subsection (defined in byte size) from a String */
     void remove (size_t index, size_t count = 1);
 
-    
+
     /* Wrapper for vsnprintf that appends the result to the end of a String */
     void insert_fmt_va (uint8_t const* fmt, va_list args);
 
@@ -252,7 +252,7 @@ namespace utf8 {
 
     /* Wrapper for vsnprintf that appends the result to the end of a String */
     void insert_fmt (char const* fmt, ...);
-    
+
     /* Wrapper for vsnprintf that inserts the result at an existing grapheme index in a String */
     void insert_fmt_at_va (size_t index, uint8_t const* fmt, va_list args);
 
