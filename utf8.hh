@@ -21,10 +21,10 @@ namespace utf8 {
   extern uint8_t char_size (uint8_t const* c);
 
   /* Get the byte size of a given grapheme */
-  extern uint8_t char_size (uint32_t c);
+  extern uint8_t char_size (int32_t c);
 
   /* Convert a utf8 grapheme to utf32 */
-  extern uint32_t to_int (uint8_t const* c);
+  extern int32_t to_int (uint8_t const* c);
 
   /* Convert a utf32 grapheme to utf8 */
   extern size_t encode (int32_t c, uint8_t* bytes);

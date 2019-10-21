@@ -56,7 +56,7 @@ namespace utf8 {
   }
 
   extern
-  uint8_t char_size (uint32_t c) {
+  uint8_t char_size (int32_t c) {
     const bool vals[] = {
       c < 128,
       c >= 128 && c < 2048,
@@ -69,7 +69,7 @@ namespace utf8 {
     for (uint8_t i = 0; i < 4; ++i)
       if (vals[i]) out = i;
 
-    if (c >= 1114112) {
+    if (c >= 1114112 or c < 0) {
       printf("Char code %d is out of utf8 range (Must be integer 0 - 1114112)\n", c);
       abort();
     }
@@ -78,8 +78,8 @@ namespace utf8 {
   }
 
   extern
-  uint32_t to_int (uint8_t const* c) {
-    uint32_t out = *c;
+  int32_t to_int (uint8_t const* c) {
+    int32_t out = *c;
 
     switch (char_size(c)) {
       case 1: return out;
